@@ -32,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
       print(e);
     }
   }
-  
+
   // for retrive the data. and print data in console
   void getMessages() async {
     final messages = await _firebasefirestore.collection('messages').get();
@@ -56,7 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 //Implement logout functionality
               }),
         ],
-        title: Text('⚡️Chat'),
+        title: const Text('⚡️Chat'),
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(
@@ -86,7 +86,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       }); //from firebase.
                       //Implement send functionality.
                     },
-                    child: Text(
+                    child: const Text(
                       'Send',
                       style: kSendButtonTextStyle,
                     ),
