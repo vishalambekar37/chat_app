@@ -6,12 +6,9 @@ import 'package:flutter/material.dart';
 import '../components/log_reg_file.dart';
 // import 'package:animated_text_kit/animated_text_kit.dart';
 
-// import 'components/log_reg_file.dart';
-
 class WelcomeScreen extends StatefulWidget {
   static String id = 'welcome_screen';
   @override
-  // ignore: library_private_types_in_public_api
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
@@ -19,7 +16,8 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen>
     with TickerProviderStateMixin {
   // late Animation animation;
-  ColorTween _colorTween = ColorTween(begin: Colors.red, end: Colors.blue);
+  ColorTween _colorTween =
+      ColorTween(begin: Color(0xff031856), end: Colors.blue);
   AnimationController? _animationController;
 
   @override
@@ -53,7 +51,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               _colorTween.evaluate(
                 AlwaysStoppedAnimation(_animationController?.value ?? 0),
               ),
-              Colors.white,
+              Colors.black,
             ].map((color) => color as Color).toList(),
           ),
         ),
@@ -68,19 +66,22 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   Hero(
                     tag: 'logo',
                     child: Container(
-                      child: Image.asset('assets/images/flash_logo.png'),
+                      child: Image.asset('assets/images/new_logo_small.jpg'),
                       height: 50,
                     ),
+                  ),
+                  SizedBox(
+                    width: 10,
                   ),
                   Container(
                     child: DefaultTextStyle(
                         style: TextStyle(
-                            fontSize: 30.0,
+                            fontSize: 42.0,
                             fontWeight: FontWeight.w900,
-                            color: Colors.black),
+                            color: Color(0xFF68EBF2)),
                         child: AnimatedTextKit(
                           animatedTexts: [
-                            TypewriterAnimatedText('💎FLASH CHAT'),
+                            TypewriterAnimatedText('FLASH CHAT'),
                           ],
                           //  child: Text('💎FLASH CHAT') ,
                         )),
