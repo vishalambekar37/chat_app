@@ -1,3 +1,4 @@
+import 'package:flash_chat/components/MessageBubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,10 +10,14 @@ class ChatScreen extends StatefulWidget {
   _ChatScreenState createState() => _ChatScreenState();
 }
 
+final _firebasefirestore = FirebaseFirestore.instance;
+late User loggedInUser;
+
 class _ChatScreenState extends State<ChatScreen> {
-  final _firebasefirestore = FirebaseFirestore.instance; // for send message
+  final messageTextController = TextEditingController();
+  // for send message
   final _auth = FirebaseAuth.instance; //for log in
-  late User loggedInUser;
+
   late String messageText; //for send msg
 
   @override
@@ -33,23 +38,6 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  // for retrive the data. and print data of our firebase collection  in console
-  // void getMessages() async {
-  //   final messages = await _firebasefirestore.collection('New_messages').get();
-  //   for (var message  in messages.docs) {
-  //     print(message.data());
-  //   }
-  // }
-//print data of our firebase collection  in console //**********stream*********
-  void messagesStream() async {
-    await for (var snapshot
-        in _firebasefirestore.collection('messages').snapshots()) {
-      for (var message in snapshot.docs) {
-        print(message.data());
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,9 +47,8 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
-                messagesStream();
-                // _auth.signOut();
-                // Navigator.pop(context);
+                _auth.signOut();
+                Navigator.pop(context);
                 //Implement logout functionality
               }),
         ],
@@ -73,38 +60,8 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            StreamBuilder<QuerySnapshot>(
-                stream: _firebasefirestore.collection('messages').snapshots(),
-                // below for print  type and store data on screen .
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final messages = snapshot.data!.docs;
-                    List<Widget> messageWidgets = [];
-
-                    for (var message in messages) {
-                      final messageData =
-                          message.data() as Map<String, dynamic>;
-                      final messageText = messageData['text'];
-                      final messageSender = messageData['sender'];
-
-                      final messageWidget = Text(
-                        '$messageText from $messageSender',
-                      );
-                      messageWidgets.add(messageWidget);
-                    }
-
-                    return Column(
-                      children: messageWidgets,
-                    );
-                  }
-
-                  // Add your desired fallback widget here in case there's no data
-                  return CircularProgressIndicator();
-                }
-
-                // Handling case when snapshot does  // Example: showing a loading indicator
-                //streambuilder use to display msg on screen from firebase collection.
-                ),
+            MessagesStream(),
+            //below for typing pad above texts which text will after show in display.
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -112,6 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: messageTextController,
                       onChanged: (value) {
                         messageText = value;
                         //Do something with the user input.
@@ -121,6 +79,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   TextButton(
                     onPressed: () {
+                      messageTextController.clear();
                       _firebasefirestore.collection('messages').add({
                         'text': messageText,
                         'sender': loggedInUser.email,
@@ -139,5 +98,57 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
     );
+  }
+}
+
+class MessagesStream extends StatelessWidget {
+  const MessagesStream({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: _firebasefirestore.collection('messages').snapshots(),
+        // below for print  type and store data on screen .
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final messages = snapshot.data!.docs
+                .reversed; // by the reverse , msg show in bottom as type.
+            List<MessageBubble> messageBubbles = [];
+
+            for (var message in messages) {
+              final messageData = message.data() as Map<String, dynamic>;
+              final messageText = messageData['text'];
+              final messageSender = messageData['sender'];
+
+              final currentUser = loggedInUser.email;
+              if (currentUser == messageSender) {
+                //the message from the logged in user.
+              }
+
+              final messageBubble = MessageBubble(
+                  sender: messageSender,
+                  text: messageText,
+                  isMe: currentUser == messageSender);
+              messageBubbles.add(messageBubble);
+            }
+
+            return Expanded(
+              child: ListView(
+                reverse: true,
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                children: messageBubbles,
+              ),
+            );
+          }
+
+          // Add your desired fallback widget here in case there's no data
+          return CircularProgressIndicator(
+            backgroundColor: Colors.amber,
+          );
+        }
+
+        // Handling case when snapshot does  // Example: showing a loading indicator
+        //streambuilder use to display msg on screen from firebase collection.
+        );
   }
 }
