@@ -1,22 +1,19 @@
-# flash_chat
+# Simple-Chat App
 
-A new Flutter project.
+A simple Chat App for general purposes 
 
-## Getting Started
+## Why use it?
 
-This project is a starting point for a Flutter application.
+It is useful for Chatting or Group Chat.
 
-A few resources to get you started if this is your first Flutter project:
+## Features
+* Real-time Messaging
+* User Authentication
+* Offline Capabilities
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# flash_chat" 
-"# flash_chat" 
-"# flash_chat" 
-"# flash_chat" 
-"# chat_app" 
-"# chat_app" 
+## Built With
+* Flutter
+* Dart
+* Firebase
+
