@@ -17,6 +17,7 @@ It is useful for Chatting or Group Chat.
 * Dart
 * Firebase
 
+## Flash Chat Views
 <img src="https://github.com/vishalambekar37/chat_app/assets/127341095/a945d178-8589-4f3a-82da-81c83db17b5b" alt="Flash Chat ss1" width="300" height="650">
 
 <img src="https://github.com/vishalambekar37/chat_app/assets/127341095/efcf5197-2500-4885-a995-5ab05f75f264" alt="Flash Chat ss1" width="300" height="650">
